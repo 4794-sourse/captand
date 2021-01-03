@@ -334,7 +334,7 @@ git tag -a v1(第一版) -m "第一版"
 **二、创建分支**
 
 ```
-git checkout -b dev  //创建dev分支，并且切换到dev分支
+git checkout -b dev   //创建dev分支，并且切换到dev分支
 ```
 
 成员在dev分支上进行创建新的分支，并且进行新的开发。
