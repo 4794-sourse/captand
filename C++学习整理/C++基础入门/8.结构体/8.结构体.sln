@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "8.结构体", "8.结构体\8.结构体.vcxproj", "{902313B2-06BA-4449-97B2-A73DBF9E718C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{902313B2-06BA-4449-97B2-A73DBF9E718C}.Debug|x64.ActiveCfg = Debug|x64
+		{902313B2-06BA-4449-97B2-A73DBF9E718C}.Debug|x64.Build.0 = Debug|x64
+		{902313B2-06BA-4449-97B2-A73DBF9E718C}.Debug|x86.ActiveCfg = Debug|Win32
+		{902313B2-06BA-4449-97B2-A73DBF9E718C}.Debug|x86.Build.0 = Debug|Win32
+		{902313B2-06BA-4449-97B2-A73DBF9E718C}.Release|x64.ActiveCfg = Release|x64
+		{902313B2-06BA-4449-97B2-A73DBF9E718C}.Release|x64.Build.0 = Release|x64
+		{902313B2-06BA-4449-97B2-A73DBF9E718C}.Release|x86.ActiveCfg = Release|Win32
+		{902313B2-06BA-4449-97B2-A73DBF9E718C}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
