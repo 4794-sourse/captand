@@ -960,7 +960,7 @@ int main() {
 
 ### 7.5const修饰指针
 
-const 修饰指针 ——常量指针， 特点：不可以修改指针的指向可以修改，但指针指向的值
+const 修饰指针 ——常量指针， 特点：不可以修改指针的值，但可以修改指针的指向。
 
 const 修饰常量 —— 指针常量，特点：指针的指向不可以修改，但指针指向的值可以修改。
 
@@ -1098,7 +1098,7 @@ int main() {
 
 3.定义结构体是顺便创建变量
 
-```
+```c++
 #include <iostream>
 using namespace std;
 
@@ -1305,7 +1305,7 @@ void printfstu2(const student *s) {
 }
 
 void printfstu3(student * const s) {
-	s->age = 100; s->score = 200; //不可以修改
+	s->age = 100; s->score = 200; //可以修改
 	cout << "② " << s->age << " " << s->name << " " << s->score << endl;
 }
 
@@ -1956,6 +1956,8 @@ int main() {
 }
 ```
 
+
+
 # C++核心编程
 
 本阶段只要针对C++==面向对象==编程技术做详细说明，探讨C++中的核心和精髓
@@ -1964,7 +1966,7 @@ int main() {
 
 C++程序在执行时，将内存大方向划分为四个区域
 
-1.代码区：存放函数体的二进制代码，有操作系统进行管理
+1.代码区：存放函数体的二进制代码，由操作系统进行管理
 
 2.全局区：存放全局变量和静态变量以及常量
 
@@ -2055,7 +2057,7 @@ int main() {
 
 ​		有编译器自动分配释放，存放函数的参数值，局部变量等
 
-​		注意事项：不要返回局部变量的地址，栈区开辟的数据有编译器自动释放
+​		注意事项：不要返回局部变量的地址，栈区开辟的数据由编译器自动释放
 
 ```c++
 #include <iostream>
@@ -2112,10 +2114,467 @@ int main() {
 
 ### 1.3new操作符
 
+C++中利用==new==操作符在堆区开辟数据
+
+堆区开辟的数据，由程序员手动开辟，手动释放，释放利用操作符==delete==
+
+语法：`new 数据类型`
+
+利用new创建的数据，会返回数据对应的类型的指针
+
+```c++
+#include <iostream>
+using namespace std;
+//1.new的基本语法
+int *func() {
+	//在堆区创建整型数据
+	//new返回是，改数据类型的指针
+	int *p = new int(10);
+	return p;
+}
+
+void test01() {
+	int *p = func();
+	cout << *p << endl;
+	cout << *p << endl;
+	cout << *p << endl;//堆区的数据有程序员管理开辟，程序员管理释放
+	//如果想释放堆区的数据，利用关键字delete
+	delete p;
+	cout << *p << endl;
+}
+
+//2.在堆区利用new开辟数组
+void test02() {
+	//创建10个整型数据的数组，在堆区
+	int *arr = new int[10];
+	for (int i = 0; i < 10; i++) {
+		arr[i] = i + 100;
+	}
+	for (int i = 0; i < 10; i++) {
+		cout << arr[i] << " ";
+	}
+	//释放堆区数组
+	//释放数组的时候, 要加[]才可以
+	delete[] arr;
+}
+int main() {
+	test01();
+	test02();
+	system("pause");
+	return 0;
+}
+```
+
+
+
 ## 2.引用
+
+### 2.1引用的基本使用
+
+**作用：**给变量起别名
+
+**语法：**`数据类型 &别名 = 原名`
+
+```c++
+#include <iostream>
+using namespace std;
+int main() {
+	//引用基本语法
+	//数据类型 &别名 = 原名
+	int a = 10;
+	int &b = a;
+	b = 20;
+	cout << "a = " << a << endl;
+	cout << "b = " << b << endl;
+	cout << "a 的地址为：" << &a << endl;
+	cout << "b 的地址为：" << &b << endl;
+	//必须初始化，初始化后不可以更改
+	//int &c; 错误
+	int c = 30;
+	b = c; //赋值操作，而不是更改引用
+	system("pause");
+	return 0;
+}
+```
+
+
+
+### 2.2引用的注意事项
+
+**注意**：①引用必须初始化
+
+​			②一旦初始化，就不可以更改
+
+### 2.3引用做函数参数
+
+**作用：**函数传参时，可以利用引用的技术让形参修饰实参
+
+**优点：**可以简化指针修改实参
+
+```c++
+#include <iostream>
+using namespace std;
+
+//1.值传递
+void myswap01(int a, int b) {
+	int temp = a;
+	a = b;
+	b = temp;
+	return;
+}
+//2.地址传递
+void myswap02(int *a, int *b) {
+	int temp = *a;
+	*a = *b;
+	*b = temp;
+	return;
+}
+
+//3.引用传递
+void myswap03(int &a, int &b) {
+	int temp = a;
+	a = b;
+	b = temp;
+	return;
+}
+
+int main() {
+	int a = 10, b = 20;
+	myswap01(a, b);
+	cout << "myswap01:" << endl;
+	cout << "a = " << a << endl;
+	cout << "b = " << b << endl;
+	myswap02(&a, &b);
+	cout << "myswap02:" << endl;
+	cout << "a = " << a << endl;
+	cout << "b = " << b << endl;
+	myswap03(a, b);
+	cout << "myswap03:" << endl;
+	cout << "a = " << a << endl;
+	cout << "b = " << b << endl;
+	system("pause");
+	return 0;
+}
+```
+
+总结：通过引用参数产生的效果同按地址传递是一样的。引用的语法更清楚。
+
+### 2.4引用做函数返回值
+
+**作用：**引用是可以作为函数的返回值存在的
+
+**注意：不要返回局部变量引用**
+
+**用法：**函数调用作为左值
+
+```c++
+#include <iostream>
+using namespace std;
+
+//引用做函数的返回值
+//1.不要返回局部变量的引用
+
+int& test01() {
+	int a = 10; //局部变量存在四区中的 栈区
+	return a;
+}
+
+//2.函数调用作为左值
+int& test02() {
+	static int a = 10; //静态变量，存放在全局区，全局区数据由系统释放
+	return a;
+}
+int main() {
+	int &ref = test01();
+	cout << "ref = " << ref << endl;//第一次结果正确，是因为编译器做了保存
+	cout << "ref = " << ref << endl;//第二次结果错误，因为a的内存已经释放
+	int &ref2 = test02();
+	cout << "ref2 = " << ref2 << endl;
+	cout << "ref2 = " << ref2 << endl;
+	test02() = 1000; //如果函数的返回值是引用，可以作为左值，ref2是函数test02的一个引用，所以修改函数，ref2也被修改
+	cout << "ref2 = " << ref2 << endl;
+	cout << "ref2 = " << ref2 << endl;
+	system("pause");
+	return 0;
+}
+```
+
+
+
+### 2.5引用的本质
+
+本质：引用的本质在c++内部实现是一个指针常量
+
+```c++
+#include <iostream>
+using namespace std;
+
+//发现是引用，转换为int *const ref = &a;
+void func(int &ref) {
+	ref = 100; //ref是引用，转换为*ref = 100
+}
+int main() {
+	int a = 10;
+	//自动转换为 int *const ref = &a; 指针常量，指针的指向不可以更改，也说明为什么引用不可以更改
+	int &ref = a;
+	ref = 20;
+	cout << "a = " << a << endl;
+	cout << "ref = " << ref << endl;
+	system("pause");
+	return 0;
+}
+```
+
+
+
+### 2.6常量引用
+
+**作用：**常量引用主要用来修饰形参，防止误操作
+
+在函数形参列表中，可以加const修饰形参，防止形参改变实参
+
+```c++
+#include <iostream>
+using namespace std;
+
+//打印数据函数
+void showvalue(const int &val) {
+	//val = 1000;
+	cout << "val = " << val << endl;
+}
+
+int main() {
+	//常量引用
+	//使用场景：用来修饰形参，防止误操作
+	/*int a = 10;
+	int &ref = 10; //必须引用一块合法的内存空间，10是字面量
+	const int &ref1 = 10; //加上const之后，编译器将代码修改 int temp = 10; int &ref1 = temp;
+	ref1 = 20;//加入const之后变为只读。不可以修改
+	//const int *const ref1;*/
+
+	int a = 100;
+	showvalue(a);
+	cout << "a = " << a << endl;
+	system("pause");
+	return 0;
+}
+```
+
+
 
 ## 3.函数提高
 
+### 3.1函数默认值参数
+
+在C++中，函数的形参列表中的形参是可以有默认值的。
+
+**语法**：`返回值类型 函数名 (参数 = 默认值) {}`
+
+```c++
+#include <iostream>
+using namespace std;
+
+int func(int a, int b = 20, int c = 30) {
+	return a + b + c;
+}
+//函数默认参数,如果传入了数据，就用传入的，没传用默认的
+int func2(int a, int b = 20, int c = 30) {
+	return a + b + c;
+}
+//注意事项
+//1.如果某个位置有了默认参数，那么从这个位置之后都要有默认参数
+//2.如果函数声明有了默认参数，那么函数的实现就不能有默认参数
+//声明和实现只能有一个默认参数
+int func3(int a = 10, int b = 20);
+int func3(int a, int b) {
+	return a + b;
+}
+int main() {
+	cout << func(10, 20, 30) << endl;
+	cout << func2(10) << endl;
+	cout << func3(30, 50) << endl;
+	system("pause");
+	return 0;
+}
+```
+
+
+
+### 3.2函数占位参数
+
+C++中函数形参列表中可以有占位参数，用来做占位，调整函数时必须填补该位置
+
+**语法**：`返回值类型 函数名 (数据类型) {}`
+
+```c++
+#include <iostream>
+using namespace std;
+//占位参数
+//目前阶段的占位参数，还用不到
+void func(int a, int) {
+	cout << "this is func" << endl;
+}
+//占位参数还可以有默认参数
+void func2(int a, int = 10) {
+	cout << "this id func2" << endl;
+}
+int main() {
+	func(10, 10);
+	func2(10);
+	system("pause");
+	return 0;
+}
+```
+
+
+
+### 3.3函数重载
+
+#### 3.3.1函数重载概述
+
+**作用**：函数名可以相同，提高复用性
+
+**函数重载满足条件**：
+
+- 同一个作用域下
+
+- 函数名相同
+
+- 函数参数**类型不同** 或者 **个数不同** 或者**顺序不同**
+
+
+
+**注意**：函数返回值不可以作为函数重载条件
+
+```c++
+#include <iostream>
+using namespace std;
+
+//函数重载
+//可以让函数名相同， 提高复用性
+
+//满足条件： 1.同一个作用域下 2.函数名称相同 3. 函数参数类型不同 或者 个数不同 或者 顺序不同
+void func() {
+	cout << "func的调用" << endl;
+}
+//个数不同
+void func(int a) {
+	cout << "func的调用!" << endl;
+}
+
+void func(double  a) {
+	cout << "func的调用！!" << endl;
+}
+
+void func(int a, double  b) {
+	cout << "func的调用！! !" << endl;
+}
+
+void func(double a, double  b) {
+	cout << "func的调用！! ! !" << endl;
+}
+
+void func(double a, int b) {
+	cout << "func的调用！! ! ! !" << endl;
+}
+//注意事项
+//函数的返回值不可以作为函数重载的条件
+int func(double a, int b) {
+	cout << "func的调用！! ! ! !" << endl;
+	return 0;
+}
+int main() {
+	
+	//func();
+	//func(10);
+	//func(10.0);
+	func(1.2, 2.4);
+	func(1.3, 4);
+	system("pause");
+	return 0;
+}
+```
+
+
+
+#### 3.3.2函数重载注意事项
+
+- 引用作为重载条件
+- 函数重载碰到函数默认参数
+
+```c++
+#include <iostream>
+using namespace std;
+
+//函数重载的注意事项
+//1.引用作为重载条件
+void func(int &a) { //int &a = 10;错误操作
+	cout << "func(int &a)调用" << endl;
+}
+
+void func(const int &a) {  //const int &a = 10;合法操作
+	cout << "func(const int &a)调用" << endl;
+}
+//2.函数重载碰到默认参数
+void func2(int a, int b = 10) {
+	cout << "func2(int a) 的调用" << endl;
+}
+
+void func2(int a) {
+	cout << "func2(int a) 的调用" << endl;
+}
+
+int main() {
+	int a = 10;
+	func(a);
+	func(10);
+	func2(10); //当函数重载碰到默认参数，出现二义性
+	system("pause");
+	return 0;
+}
+```
+
+
+
 ## 4.类与对象
+
+C++面向对象的三大特性为：==封装、继承、多态==
+
+C++认为==万事万物都皆为对象==，对象上其属性和行为
+
+例如：
+
+​		人可以作为对象，属性有姓名、年龄、身高、体重..., 行为有走、跑、跳、吃饭...
+
+​		车也可以作为对象，属性有轮胎、方向盘、车灯...， 行为有载人、放音乐...
+
+​		具有相同性质的==对象==，我们可以抽象称为==类==，人属于类，车属于车类
+
+### 4.1封装
+
+#### 4.1.1封装的意义
+
+封装是C++面向对象三大特性之一
+
+封装的意义：
+
+- 将属性和行为作为一个整体，表现生活中的事物
+- 将属性和行为加以权限控制
+
+#### 4.1.2struct和class区别
+
+#### 4.1.3成员属性设置为私有
+
+### 4.2对象的初始化和清理
+
+### 4.3C++对象模型和this指针
+
+### 4.4友元
+
+### 4.5运算符重载
+
+### 4.6继承
+
+### 4.7多态
 
 ## 5.文件操作
