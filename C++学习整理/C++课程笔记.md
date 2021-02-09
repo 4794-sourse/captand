@@ -2561,11 +2561,478 @@ C++认为==万事万物都皆为对象==，对象上其属性和行为
 - 将属性和行为作为一个整体，表现生活中的事物
 - 将属性和行为加以权限控制
 
+**封装的意义一：**
+
+​	在设计类的时候，属性和行为写在一起，表现事物
+
+语法：`class 类名{ 访问权限: 属性 / 行为 };`
+
+**类中的属性和行为统一称为成员**
+
+**属性 ：成员属性、成员变量**
+
+**行为：成员函数、成员方法**
+
+**示例一：设计一个圆类求圆的周长**
+
+```c++
+#include <iostream>
+using namespace std;
+const double PI = 3.14;
+//设计一个圆类，求圆的周长
+//圆求周长的公式 ：2 * PI *半径
+//class 代表设计一个类，类后面紧跟着的就是类名称
+class cricle {
+	//访问权限
+	//公共权限
+public:
+	//属性：半径
+	int m_r;
+	//行为：h获取圆的周长
+	double calculate() {
+		return 2 * PI * m_r;
+	}
+};
+
+int main() {
+	//通过圆类 创建具体的圆（对象）
+	//实例化 （通过一个类 创建一个对象的过程）
+	cricle c1;
+	//给圆对象的属性就行赋值
+	c1.m_r = 10;
+	cout << "圆的周长：" << c1.calculate() << endl;
+	system("pause");
+	return 0;
+}
+```
+
+**示例二：设计一个学生类，属性有姓名和学号，可以给姓名和学号赋值，可以显示学生的姓名和学号**
+
+```c++
+#include <iostream>
+#include <string>
+using namespace std;
+
+class student {
+public:
+	string m_name;
+	long long m_id;
+	void print() {
+		cout << "姓名：" << m_name << ", 学号： " << m_id << endl;
+	}
+	//给姓名赋值——通过行为给属性进行赋值
+	void setname(string name) {
+		m_name = name;
+	}
+	//给id赋值
+	void setid(long long id) {
+		m_id = id;
+	}
+};
+
+int main() {
+	student s1, s2;
+	s1.m_name = "张三";
+	s1.m_id = 18100140305;
+	s1.print();
+	s2.setname("李四");
+	s2.setid(18100140109);
+	s2.print();
+	system("pause");
+	return 0;
+}
+```
+
+**封装意义二：**
+
+类的设计时，可以把属性和行为放在不同的权限下，加以控制
+
+访问权限有三种：
+
+1.public   公共权限
+
+2.protected  保护权限
+
+3.private  私有权限
+
+公共权限： 成员类内可以访问， 类外也可以访问
+
+保护权限： 成员类内可以访问， 类外不可以访问 儿子也可以访问父亲的保护内容
+
+私有权限： 成员类内可以访问， 类外不可以访问 儿子不可以访问父亲的私有内容
+
+```c++
+#include <iostream>
+#include <string>
+using namespace std;
+
+//访问权限
+//三种：
+//公共权限： 成员类内可以访问， 类外也可以访问
+//保护权限： 成员类内可以访问， 类外不可以访问 儿子也可以访问父亲的保护内容
+//私有权限： 成员类内可以访问， 类外不可以访问 儿子不可以访问父亲的私有内容
+
+class Person {
+public:
+	//公共权限
+	string m_name;
+protected:
+	//保护权限
+	string m_Car;
+private:
+	//私有权限
+	int m_Password;
+public:
+	void func() {
+		m_Car = "拖拉机";
+		m_name = "张三";
+		m_Password = 123456;
+	}
+};
+
+int main() {
+	Person p1;//实例化具体对象
+	p1.m_name = "李四";
+	p1.func();
+	p1.m_Car = "奔驰"; //保护权限内容，在类外不可以访问
+	system("pause");
+	return 0;
+}
+```
+
+
+
 #### 4.1.2struct和class区别
+
+在c++中struct和class唯一的**区别**就在于 **默认的访问权限不同**
+
+区别：
+
+- struct默认权限为公共
+- class  默认权限为私有
+
+```c++
+#include <iostream>
+#include <string>
+using namespace std;
+
+class C1 {
+	int m_A; //默认权限是私有
+};
+
+struct C2 {
+	int m_A; //默认权限是公共
+};
+int main() {
+	//struct 和 class 区别
+	C1 c1;
+	C2 c2;
+	c1.m_A = 100; //错误：不可以访问
+	c2.m_A = 100;
+	system("pause");
+	return 0;
+}
+```
+
+
 
 #### 4.1.3成员属性设置为私有
 
+**优点1：**将所有成员属性设置为私有，可以自己控制读写权限
+
+**优点2：**对于写权限，我们可以检测数据的有效性
+
+```c++
+#include <iostream>
+#include <string>
+using namespace std;
+//成员属性设置为私有
+//1.可以自己控制读写权限
+//2.对于写可以自己检测数据的有效性
+
+class Person {
+
+public:
+	//写姓名
+	void setName(string name) {
+		m_name = name;
+	}
+	//获取姓名
+	string getName() {
+		return m_name;
+	}
+	//获取年龄
+	int getage() {
+		m_age = 10;
+		return m_age;
+	}
+	//设置年龄   *设置有效性
+	void setage(int age) {
+		if (age < 0 || age > 150) {
+			m_age = 0;
+			cout << "你这个老妖精！" << endl;
+			return;
+		}
+		m_age = age;
+	}
+	//设置情人
+	void setlover(string name) {
+		m_lover = name;
+	}
+private:
+	//姓名  可读可写
+	string m_name;
+	//年龄  只读
+	int m_age;
+	//情人  只写
+	string m_lover;
+};
+int main() {
+	Person p1;
+	p1.setName("张三");
+	cout << "姓名为：" << p1.getName() << endl;
+	cout << "年龄为：" << p1.getage() << endl;
+	p1.setlover("captand");
+	p1.setage(1000);
+	system("pause");
+	return 0;
+}
+```
+
+**练习案例1：设计立方体类**
+
+设计立方体类（Cube）
+
+求出立方体面积和体积
+
+分别用全局函数和成员函数判断两个立方体是否相等
+
+```c++
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Cube {
+public:
+	void setheight(int height) {
+		m_height = height;
+	}
+	int getheight() {
+		return m_height;
+	}
+	void setlength(int tail) {
+		m_length = tail;
+	}
+	int getlength() {
+		return m_length;
+	}
+	void setweight(int weight) {
+		m_weight = weight;
+	}
+	int getweight() {
+		return m_weight;
+	}
+	int getS() {
+		return 2 * (m_height * m_length + m_height * m_weight + m_length * m_weight);
+	}
+	int getV() {
+		return m_height * m_length * m_weight;
+	}
+	//利用成员函数判断两个立方体是否相等
+	bool isSameByClass(Cube &c) {
+		if (m_height == c.getheight && m_length
+			== c.getlength && m_weight == c.getweight) {
+			return true;
+		}
+		return false;
+	}
+
+private:
+	int m_height, m_length, m_weight;
+};
+
+// 利用全局函数判断 
+bool isSame(Cube &c1, Cube &c2) {
+	if (c1.getheight == c2.getheight && c1.getlength
+		== c2.getlength && c1.getweight == c2.getweight) {
+		return true;
+	}
+	return false;
+}
+
+int main() {
+	Cube c1, c2;
+	c1.setlength(10);
+	c1.setweight(10);
+	c1.setheight(10);
+	cout << "c1的体积为：" << c1.getV() << endl;
+	cout << "c1的面积为：" << c1.getS() << endl;
+	c2.setlength(10);
+	c2.setweight(10);
+	c2.setheight(10);
+
+	bool ret = isSame(c1, c2);
+	if (ret) {
+		cout << "全局函数：c1与c2是相等的" << endl;
+	}
+	else {
+		cout << "全局函数：c1与c2是相等的" << endl;
+	}
+	ret = c1.isSameByClass(c2); //成员函数判断
+	if (ret) {
+		cout << "成员函数: c1与c2是相等的" << endl;
+	}
+	else {
+		cout << "成员函数: c1与c2是相等的" << endl;
+	}
+	system("pause");
+	return 0;
+}
+```
+
+**练习案例2：点和圆的关系**
+
+设计一个圆形类（Circle），和一个点类（Point），计算点与圆的关系。
+
+```c++
+#include <iostream>
+#include <string>
+#include "circle.h"
+#include "point.h"
+using namespace std;
+
+void isIncircle(circle &c, point &p) {
+	int distance = (c.getcenter().getX() - p.getX()) * (c.getcenter().getX() - p.getX()) +
+		(c.getcenter().getY() - p.getY()) * (c.getcenter().getY() - p.getY());
+	int rdistance = c.getR() * c.getR();
+	if (distance == rdistance) {
+		cout << "点在圆上" << endl;
+	}
+	else if (distance > rdistance) {
+		cout << "点在圆外" << endl;
+	}
+	else {
+		cout << "点在圆内" << endl;
+	}
+	return;
+}
+
+int main() {
+	//创建圆
+	circle c;
+	point center;
+	center.setX(10);
+	center.setY(0);
+	c.setcenter(center);
+	//创建点
+	point p;
+	p.setX(10);
+	p.setY(0);
+	isIncircle(c, p);
+	system("pause");
+	return 0;
+}
+```
+
+```c++
+#pragma once
+#include <iostream>
+using namespace std;
+class point {
+public:
+	//设置x
+	void setX(int x);
+	//获取x
+	int getX();
+	//设置y
+	void setY(int y);
+	//获取y
+	int getY();
+private:
+	int m_X;
+	int m_Y;
+};
+```
+
+```c++
+#include "point.h"
+
+//设置x
+void point::setX(int x) {
+	m_X = x;
+}
+//获取x
+int point::getX() {
+	return m_X;
+}
+//设置y
+void point::setY(int y) {
+	m_Y = y;
+}
+//获取y
+int point::getY() {
+	return m_Y;
+}
+```
+
+```c++
+#pragma once
+#include <iostream>
+#include "point.h"
+using namespace std;
+
+class circle {
+public:
+	void setR(int r);
+	int getR();
+	void setcenter(point center);
+	point getcenter();
+private:
+	int m_r;
+	point m_Center;
+};
+```
+
+```c++
+#include "circle.h"
+#include "point.h"
+
+void circle::setR(int r) {
+	m_r = r;
+}
+int circle::getR() {
+	return m_r;
+}
+void circle::setcenter(point center) {
+	m_Center = center;
+}
+point circle::getcenter() {
+	return m_Center;
+}
+```
+
+
+
 ### 4.2对象的初始化和清理
+
+- 生活中我们买的电子厂品都会有出厂设置，在某一天我们不用得时候也会删除一些自己信息数据保证安全
+- C++中的面向对象来源于生活，每个对象也都会有初始设置以及对象销毁前的清理数据的设置
+
+#### 4.2.1构造函数和析构函数
+
+#### 4.2.2构造函数的分类及调用
+
+#### 4.2.3拷贝构造函数调用时机
+
+#### 4.2.4构造函数调用规则
+
+#### 4.2.5深拷贝与浅拷贝
+
+#### 4.2.6初始化列表
+
+#### 4.2.7类对象作为类成员
+
+#### 4.2.8静态成员
 
 ### 4.3C++对象模型和this指针
 
